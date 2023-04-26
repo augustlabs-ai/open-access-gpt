@@ -401,3 +401,10 @@ export class Search {
 
 const chatManager = new ChatManager();
 export default chatManager;
+
+
+chatManager.on('messages', (messages) => {
+    // Handle the new messages here
+	console.log('event on messages here');
+	console.log(messages);
+});

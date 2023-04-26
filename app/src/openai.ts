@@ -87,9 +87,24 @@ export async function createStreamingChatCompletion(messages: OpenAIMessage[], p
         content: (parameters.initialSystemPrompt || defaultSystemPrompt).replace('{{ datetime }}', new Date().toLocaleString()),
     });
 
-    messagesToSend = await selectMessagesToSendSafely(messagesToSend, 2048);
+    messagesToSend = await selectMessagesToSendSafely(messagesToSend, 8048);
 
-    const eventSource = new SSE('https://api.openai.com/v1/chat/completions', {
+
+	const url = 'https://api.openai.com/v1/chat/completions'
+	//const url = 'http://localhost:8000/v1/chat/completions'
+	
+    // Create the payload object
+    const the_payload = JSON.stringify({
+        "model": parameters.model,
+        "messages": messagesToSend,
+        "temperature": parameters.temperature,
+        "stream": true,
+    });
+
+    // Log the payload
+    console.log("Payload:", the_payload);
+
+    const eventSource = new SSE(url, {
         method: "POST",
         headers: {
             'Accept': 'application/json, text/plain, */*',
